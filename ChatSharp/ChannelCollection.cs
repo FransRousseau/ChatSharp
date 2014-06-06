@@ -51,10 +51,12 @@ namespace ChatSharp
         {
             get
             {
-                var channel = Channels.FirstOrDefault(c => c.Name == name);
-                if (channel == null)
-                    throw new KeyNotFoundException();
-                return channel;
+				//var channel = Channels.FirstOrDefault(c => c.Name == name);
+				//if (channel == null)
+				//	throw new KeyNotFoundException();
+				//return channel;
+
+				return Channels.FirstOrDefault( c => c.Name == name );
             }
         }
 
