@@ -133,11 +133,32 @@ namespace ChatSharp
 			//check if connection was successful
 			if ( Connected )
 			{
-				Socket.EndConnect( result );
-				Socket.BeginReceive( ReadBuffer, ReadBufferIndex, ReadBuffer.Length, SocketFlags.None, DataRecieved, null );
+				SocketError socketError = SocketError.Success;
+
+				try
+				{
+					Socket.EndConnect( result );
+					Socket.BeginReceive( ReadBuffer, ReadBufferIndex, ReadBuffer.Length, SocketFlags.None, out socketError, DataRecieved, null );
+				}
+				catch ( Exception ex )
+				{
+					if ( SocketConnectionError == null )
+						throw ex;
+
+					OnSocketConnectionError( new SocketUnhandledExceptionEventArgs( ex ) );
+					return;
+				}
+
+				if ( socketError != SocketError.Success )
+				{
+					OnNetworkError( new SocketErrorEventArgs( socketError ) );
+					return;
+				}
+
 				// Write login info
 				if ( !string.IsNullOrEmpty( User.Password ) )
 					SendRawMessage( "PASS {0}", User.Password );
+
 				SendRawMessage( "NICK {0}", User.Nick );
 				// hostname, servername are ignored by most IRC servers
 				SendRawMessage( "USER {0} hostname servername :{1}", User.User, User.RealName );
@@ -324,6 +345,23 @@ namespace ChatSharp
 		protected internal virtual void OnUserKicked( KickEventArgs e )
 		{
 			if ( UserKicked != null ) UserKicked( this, e );
+		}
+
+		/// <summary>
+		/// Occurs when [socket connection error].
+		/// </summary>
+		public event EventHandler<SocketUnhandledExceptionEventArgs> SocketConnectionError;
+
+		/// <summary>
+		/// Raises the <see cref="E:SocketConnectoinError" /> event.
+		/// </summary>
+		/// <param name="e">The <see cref="SocketUnhandledExceptionEventArgs"/> instance containing the event data.</param>
+		protected internal virtual void OnSocketConnectionError( SocketUnhandledExceptionEventArgs e )
+		{
+			if ( SocketConnectionError == null )
+				throw e.ExceptionObject;
+
+			SocketConnectionError.Invoke( this, e );
 		}
 	}
 }

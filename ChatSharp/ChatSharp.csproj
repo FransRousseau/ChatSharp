@@ -50,6 +50,7 @@
     <Compile Include="Events\RawMessageEventArgs.cs" />
     <Compile Include="Events\ServerMOTDEventArgs.cs" />
     <Compile Include="Events\SocketErrorEventArgs.cs" />
+    <Compile Include="Events\SocketUnhandledExceptionEventArgs.cs" />
     <Compile Include="Events\SupportsEventArgs.cs" />
     <Compile Include="Handlers\ChannelHandlers.cs" />
     <Compile Include="Handlers\ListingHandlers.cs" />
