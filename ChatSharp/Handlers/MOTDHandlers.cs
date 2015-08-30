@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using ChatSharp.Events;
+using System;
 
 namespace ChatSharp.Handlers
 {
@@ -29,6 +26,20 @@ namespace ChatSharp.Handlers
             client.OnMOTDRecieved(new ServerMOTDEventArgs(MOTD));
             client.OnConnectionComplete(new EventArgs());
             // Verify our identity
+            VerifyOurIdentity(client);
+            
+        }
+
+	public static void HandleMOTDNotFound(IrcClient client, IrcMessage message)
+	{
+            client.OnMOTDRecieved(new ServerMOTDEventArgs(MOTD));
+            client.OnConnectionComplete(new EventArgs());
+
+            VerifyOurIdentity(client);
+	}
+
+	private static void VerifyOurIdentity(IrcClient client)
+	{
             if (client.Settings.WhoIsOnConnect)
             {
                 client.WhoIs(client.User.Nick, whois =>

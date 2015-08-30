@@ -1,11 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace ChatSharp
 {
-    public class RequestManager
+    internal class RequestManager
     {
         public RequestManager()
         {
@@ -23,7 +22,8 @@ namespace ChatSharp
 
         public RequestOperation PeekOperation(string key)
         {
-            return PendingOperations[key];
+            var realKey = PendingOperations.Keys.FirstOrDefault(k => string.Equals(k, key, StringComparison.OrdinalIgnoreCase));
+            return PendingOperations[realKey];
         }
 
         public RequestOperation DequeueOperation(string key)
@@ -34,7 +34,7 @@ namespace ChatSharp
         }
     }
 
-    public class RequestOperation
+    internal class RequestOperation
     {
         public object State { get; set; }
         public Action<RequestOperation> Callback { get; set; }

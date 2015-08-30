@@ -1,17 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 namespace ChatSharp
 {
+    /// <summary>
+    /// Customize the behavior of the ChatSharp client, including enabling or disabling
+    /// "helper" features.
+    /// </summary>
     public class ClientSettings
     {
-        public ClientSettings()
+        internal ClientSettings()
         {
             WhoIsOnConnect = true;
+            WhoIsOnJoin = false;
             ModeOnJoin = true;
             GenerateRandomNickIfRefused = true;
+            JoinWhoIsDelay = 1;
         }
 
         /// <summary>
@@ -28,6 +29,16 @@ namespace ChatSharp
         /// <summary>
         /// If true, the library will generate a random nick with alphanumerical characters if it
         /// encounters a NICK error.
+        /// </summary>
         public bool GenerateRandomNickIfRefused { get; set; }
+        /// <summary>
+        /// If true, the library will WHOIS everyone in a channel upon joining. This procedure can
+        /// take several minutes on larger channels.
+        /// </summary>
+        public bool WhoIsOnJoin { get; set; }
+        /// <summary>
+        /// The delay, in seconds, between each WHOIS when WhoIsOnJoin is true.
+        /// </summary>
+        public int JoinWhoIsDelay { get; set; }
     }
 }
