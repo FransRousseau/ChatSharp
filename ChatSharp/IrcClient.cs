@@ -10,7 +10,7 @@ namespace ChatSharp
 {
 	public partial class IrcClient
 	{
-		public Boolean Connected { get { return Socket.Connected; } }
+		public Boolean Connected { get { return Socket == null ? false : Socket.Connected; } }
 
 		public Boolean ConnectCompleted { get; private set; }
 
